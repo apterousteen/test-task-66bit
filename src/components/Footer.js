@@ -1,38 +1,47 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BottomNavigation, BottomNavigationAction, Paper } from '@mui/material';
 import { ColorLens, Feed } from '@mui/icons-material';
 
-export default function Footer() {
-  const [value, setValue] = useState(0);
+const paperStyle = {
+  position: 'fixed',
+  bottom: 0,
+  left: 0,
+  right: 0,
+};
+
+const bottomNavStyle = {
+  '& .MuiBottomNavigationAction-root, svg': {
+    color: 'primary.dim',
+  },
+  '& .Mui-selected, .Mui-selected > svg': {
+    color: 'textColor.main',
+  },
+  bgcolor: 'primary.main',
+};
+
+export default function Footer({ page, onPageNavigation }) {
+  const [value, setValue] = useState(page);
+
+  useEffect(() => {
+    onPageNavigation(value);
+  }, [value]);
 
   return (
-    <Paper
-      sx={{
-        position: 'fixed',
-        bottom: 0,
-        left: 0,
-        right: 0,
-      }}
-      elevation={3}
-    >
+    <Paper sx={paperStyle} elevation={3}>
       <BottomNavigation
-        sx={{
-          '& .MuiBottomNavigationAction-root, svg': {
-            color: 'primary.dim',
-          },
-          '& .Mui-selected, .Mui-selected > svg': {
-            color: 'textColor.main',
-          },
-          bgcolor: 'primary.main',
-        }}
+        sx={bottomNavStyle}
         showLabels
         value={value}
-        onChange={(event, newValue) => {
+        onChange={(e, newValue) => {
           setValue(newValue);
         }}
       >
-        <BottomNavigationAction label="News" icon={<Feed />} />
-        <BottomNavigationAction label="Themes" icon={<ColorLens />} />
+        <BottomNavigationAction value="news" label="News" icon={<Feed />} />
+        <BottomNavigationAction
+          value="themes"
+          label="Themes"
+          icon={<ColorLens />}
+        />
       </BottomNavigation>
     </Paper>
   );

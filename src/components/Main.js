@@ -1,6 +1,4 @@
 import { Container } from '@mui/material';
-import Themes from './Themes';
-import NewsFeed from './NewsFeed';
 
 const mainInnerContainerStyle = {
   display: 'flex',
