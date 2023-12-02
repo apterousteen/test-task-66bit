@@ -2,24 +2,24 @@ import { Container } from '@mui/material';
 import Themes from './Themes';
 import NewsFeed from './NewsFeed';
 
-export default function Main() {
+const mainInnerContainerStyle = {
+  display: 'flex',
+  alignItems: 'stretch',
+  flexDirection: 'column',
+  gap: 2,
+  py: 3,
+  minHeight: 'calc(100vh - 100px)',
+  backgroundColor: 'secondary.main',
+};
+
+export default function Main({ children }) {
   return (
-    <Container maxWidth={false} sx={{ bgcolor: 'secondary.main', p: 0 }}>
-      <Container
-        maxWidth="sm"
-        component="main"
-        sx={{
-          display: 'flex',
-          alignItems: 'stretch',
-          flexDirection: 'column',
-          gap: 2,
-          py: 3,
-          minHeight: 'calc(100vh - 120px)',
-          bgcolor: 'secondary.main',
-        }}
-      >
-        <NewsFeed />
-        <Themes />
+    <Container
+      maxWidth={false}
+      sx={{ backgroundColor: 'secondary.main', p: 0 }}
+    >
+      <Container maxWidth="sm" component="main" sx={mainInnerContainerStyle}>
+        {children}
       </Container>
     </Container>
   );

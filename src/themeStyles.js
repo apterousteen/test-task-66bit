@@ -90,8 +90,74 @@ export const lightTheme = createTheme({
   },
 });
 
+// Дополнительные цвета не из API
+export const colors = {
+  info: {
+    light: {
+      main: 'rgb(229, 246, 253)',
+      icon: 'rgb(2 136 209)',
+      text: 'rgb(1, 67, 97)',
+    },
+    dark: {
+      main: 'rgb(7, 19, 24)',
+      icon: 'rgb(41, 182, 246)',
+      text: 'rgb(184, 231, 251)',
+    },
+  },
+
+  error: {
+    light: {
+      main: 'rgb(253, 237, 237)',
+      icon: 'rgb(211 47 47)',
+      text: 'rgb(95, 33, 32)',
+    },
+    dark: {
+      main: 'rgb(22, 11, 11)',
+      icon: 'rgb(244, 67, 54)',
+      text: 'rgb(244, 199, 199)',
+    },
+  },
+
+  dim: {
+    light: 'rgb(122 144 135)',
+    dark: 'rgb(120 120 120)',
+    blue: 'rgb(118 115 135)',
+  },
+};
+
+// Тема MUI не может быть пустой, так что по умолчанию данные светлой темы
+// Также приложение будет корректно отображаться при отсутствии связи с сервером
+export const currentTheme = createTheme({
+  palette: {
+    primary: {
+      main: 'rgb(206, 240, 227)',
+      dim: colors.dim.light,
+    },
+    secondary: {
+      main: 'rgb(255, 255, 255)',
+    },
+    textColor: 'rgb(10, 10, 10)',
+    error: {
+      main: colors.error.light.main,
+      icon: colors.error.light.icon,
+      text: colors.error.light.text,
+    },
+    info: {
+      main: colors.info.light.main,
+      icon: colors.info.light.icon,
+      text: colors.info.light.text,
+    },
+  },
+
+  typography: {
+    allVariants: {
+      color: 'rgb(10, 10, 10)',
+    },
+  },
+});
+
+// Стилизует радио кнопки как обычные
 export const radioButtonTheme = createTheme({
-  // style radio button as button element
   components: {
     MuiToggleButton: {
       styleOverrides: {
