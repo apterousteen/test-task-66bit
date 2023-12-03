@@ -9,6 +9,7 @@ import Footer from './components/Footer';
 import Themes from './components/Themes';
 import NewsFeed from './components/NewsFeed';
 import { timeout } from './helpers';
+import Page404 from './components/Page404';
 
 // TODO: вынести все стили в отдельный файл
 
@@ -130,6 +131,7 @@ function App() {
             onThemeNameToggle={handleThemeNameToggle}
           />
         )}
+        <Page404 />
       </Main>
       <Footer page={page} onPageNavigation={handlePageNavigation} />
     </ThemeProvider>
