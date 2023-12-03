@@ -2,19 +2,28 @@ import { useEffect, useState } from 'react';
 import { CssBaseline } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { colors, defaultTheme } from './themeStyles';
+import { THEME_GET_ENDPOINT } from './config';
 import Header from './components/Header';
 import Main from './components/Main';
 import Footer from './components/Footer';
 import Themes from './components/Themes';
 import NewsFeed from './components/NewsFeed';
-import { THEME_GET_ENDPOINT } from './config';
+import { timeout } from './helpers';
 
 // TODO: вынести все стили в отдельный файл
 
 function App() {
-  const [curTheme, setCurTheme] = useState(defaultTheme);
   // Название темы необходимо для работы ToggleGroup
-  const [themeName, setThemeName] = useState('light');
+  const [themeName, setThemeName] = useState(() => {
+    const localThemeName = JSON.parse(localStorage.getItem('theme'))?.palette
+      ?.type;
+
+    return localThemeName || 'light';
+  });
+
+  const [curTheme, setCurTheme] = useState(defaultTheme);
+  const [themeLoading, setThemeLoading] = useState(false);
+  const [themeErrorMsg, setThemeErrorMsg] = useState('');
 
   const changeAppTheme = (themeObj) => {
     const { name, mainColor, secondColor, textColor } = themeObj;
@@ -54,12 +63,36 @@ function App() {
   };
 
   useEffect(() => {
+    localStorage.setItem('theme', JSON.stringify(curTheme));
+  }, [curTheme]);
+
+  useEffect(() => {
+    const controller = new AbortController();
     const fetchTheme = async (themeName) => {
-      console.log('fetchTheme');
+      try {
+        console.log('fetchTheme');
 
-      const response = await fetch(`${THEME_GET_ENDPOINT}?name=${themeName}`);
+        setThemeLoading(true);
+        setThemeErrorMsg('');
 
-      changeAppTheme(await response.json());
+        const fetchPromise = fetch(`${THEME_GET_ENDPOINT}?name=${themeName}`, {
+          signal: controller.signal,
+        });
+
+        const res = await Promise.race([fetchPromise, timeout(4)]);
+
+        if (!res.ok) throw new Error(`Что-то пошло не так. Попробуйте снова`);
+
+        changeAppTheme(await res.json());
+
+        setThemeErrorMsg('');
+      } catch (e) {
+        if (e.name !== 'AbortError') {
+          setThemeErrorMsg(e.message);
+        }
+      } finally {
+        setThemeLoading(false);
+      }
     };
 
     if (!themeName) {
@@ -68,6 +101,11 @@ function App() {
     }
 
     fetchTheme(themeName);
+
+    return () => {
+      // прерываем предыдущий запрос, чтобы не было race condition
+      controller.abort();
+    };
   }, [themeName]);
 
   // TODO: убрать, когда будет роутинг
@@ -87,6 +125,8 @@ function App() {
         {page === 'themes' && (
           <Themes
             themeName={themeName}
+            themeLoading={themeLoading}
+            themeErrorMsg={themeErrorMsg}
             onThemeNameToggle={handleThemeNameToggle}
           />
         )}

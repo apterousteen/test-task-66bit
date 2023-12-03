@@ -29,13 +29,40 @@ const alertInfoStyle = {
   },
 };
 
-export default function Themes({ themeName, onThemeNameToggle }) {
+const alertErrorStyle = {
+  width: '65vw',
+  bgcolor: 'error.main',
+  '& .MuiAlert-message': {
+    color: 'error.text',
+  },
+  '& .MuiAlert-icon': {
+    color: 'error.icon',
+  },
+};
+
+export default function Themes({
+  themeName,
+  themeLoading,
+  themeErrorMsg,
+  onThemeNameToggle,
+}) {
   return (
     <Container sx={themesContainerStyle}>
-      <Alert severity="info" sx={alertInfoStyle}>
-        {/* loading вставить */}
-        Выбрана <b>{themeNames[themeName]}</b> тема
-      </Alert>
+      {!themeErrorMsg && (
+        <Alert severity="info" sx={alertInfoStyle}>
+          {themeLoading && 'Загрузка темы...'}
+          {!themeLoading && (
+            <>
+              Выбрана <b>{themeNames[themeName]}</b> тема
+            </>
+          )}
+        </Alert>
+      )}
+      {themeErrorMsg && (
+        <Alert severity="error" sx={alertErrorStyle}>
+          {themeErrorMsg}
+        </Alert>
+      )}
       <ThemeProvider theme={radioButtonTheme}>
         <ToggleButtonGroup
           orientation="vertical"
