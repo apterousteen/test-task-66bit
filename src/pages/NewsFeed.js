@@ -1,5 +1,5 @@
-import NewsCard from './NewsCard';
-import ObserverRef from './ObserverRef';
+import NewsCard from '../components/NewsCard';
+import ObserverRef from '../components/ObserverRef';
 import { Container } from '@mui/material';
 
 export default function NewsFeed() {

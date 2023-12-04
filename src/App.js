@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
-// import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { CssBaseline } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { colors, defaultTheme } from './themeStyles';
 import { THEME_GET_ENDPOINT } from './config';
-import { timeout } from './helpers';
+import { getPageName, timeout } from './helpers';
 import Header from './components/Header';
 import Main from './components/Main';
 import Footer from './components/Footer';
-import Themes from './components/Themes';
-import NewsFeed from './components/NewsFeed';
-import Page404 from './components/Page404';
+import Themes from './pages/Themes';
+import NewsFeed from './pages/NewsFeed';
+import Page404 from './pages/Page404';
 
 // TODO: вынести все стили в отдельный файл
 
@@ -26,6 +26,7 @@ function App() {
   const [curTheme, setCurTheme] = useState(defaultTheme);
   const [themeLoading, setThemeLoading] = useState(false);
   const [themeErrorMsg, setThemeErrorMsg] = useState('');
+  const [page, setPage] = useState(getPageName(window.location.pathname));
 
   const changeAppTheme = (themeObj) => {
     const { name, mainColor, secondColor, textColor } = themeObj;
@@ -62,6 +63,10 @@ function App() {
     if (newThemeName !== null) {
       setThemeName(newThemeName);
     }
+  };
+
+  const handlePageNavigation = (pageName) => {
+    setPage(pageName);
   };
 
   useEffect(() => {
@@ -110,29 +115,26 @@ function App() {
     };
   }, [themeName]);
 
-  // TODO: убрать, когда будет роутинг
-  const [page, setPage] = useState('news');
-
-  const handlePageNavigation = (pageName) => {
-    setPage(pageName);
-  };
-
   return (
     <ThemeProvider theme={curTheme}>
       <CssBaseline />
-      <Header heading="News" />
+      <Header heading={page} />
       <Main>
-        {/*TODO: нормальный роутинг*/}
-        {page === 'news' && <NewsFeed />}
-        {page === 'themes' && (
-          <Themes
-            themeName={themeName}
-            themeLoading={themeLoading}
-            themeErrorMsg={themeErrorMsg}
-            onThemeNameToggle={handleThemeNameToggle}
+        <Routes>
+          <Route path={'/'} element={<NewsFeed />} />
+          <Route
+            path={'themes'}
+            element={
+              <Themes
+                themeName={themeName}
+                themeLoading={themeLoading}
+                themeErrorMsg={themeErrorMsg}
+                onThemeNameToggle={handleThemeNameToggle}
+              />
+            }
           />
-        )}
-        {/*<Page404 />*/}
+          <Route path={'*'} element={<Page404 />} />
+        </Routes>
       </Main>
       <Footer page={page} onPageNavigation={handlePageNavigation} />
     </ThemeProvider>

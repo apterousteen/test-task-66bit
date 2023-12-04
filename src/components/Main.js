@@ -2,7 +2,6 @@ import { Container } from '@mui/material';
 
 const mainInnerContainerStyle = {
   display: 'flex',
-  minHeight: 'calc(100vh - 100px)',
   backgroundColor: 'secondary.main',
   p: 0,
 };
@@ -14,7 +13,11 @@ export default function Main({ children }) {
       maxWidth={false}
       sx={{ backgroundColor: 'secondary.main', p: 0 }}
     >
-      <Container maxWidth="sm" sx={mainInnerContainerStyle}>
+      <Container
+        className="main__inner-container"
+        maxWidth="sm"
+        sx={mainInnerContainerStyle}
+      >
         {children}
       </Container>
     </Container>

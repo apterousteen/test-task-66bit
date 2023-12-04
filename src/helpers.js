@@ -5,3 +5,9 @@ export const timeout = function (s) {
     }, s * 1000);
   });
 };
+
+export const getPageName = (pathname) => {
+  if (pathname === '/') return 'news';
+  else if (pathname === '/themes') return 'themes';
+  else return null;
+};

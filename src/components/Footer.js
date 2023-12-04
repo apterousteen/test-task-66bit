@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { BottomNavigation, BottomNavigationAction, Paper } from '@mui/material';
 import { ColorLens, Feed } from '@mui/icons-material';
 
@@ -36,10 +37,18 @@ export default function Footer({ page, onPageNavigation }) {
           setValue(newValue);
         }}
       >
-        <BottomNavigationAction value="news" label="News" icon={<Feed />} />
         <BottomNavigationAction
+          component={Link}
+          to="/"
+          value="news"
+          label="Новости"
+          icon={<Feed />}
+        />
+        <BottomNavigationAction
+          component={Link}
+          to="/themes"
           value="themes"
-          label="Themes"
+          label="Темы"
           icon={<ColorLens />}
         />
       </BottomNavigation>
