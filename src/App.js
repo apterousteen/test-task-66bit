@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
+// import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { CssBaseline } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { colors, defaultTheme } from './themeStyles';
 import { THEME_GET_ENDPOINT } from './config';
+import { timeout } from './helpers';
 import Header from './components/Header';
 import Main from './components/Main';
 import Footer from './components/Footer';
 import Themes from './components/Themes';
 import NewsFeed from './components/NewsFeed';
-import { timeout } from './helpers';
 import Page404 from './components/Page404';
 
 // TODO: вынести все стили в отдельный файл
@@ -131,7 +132,7 @@ function App() {
             onThemeNameToggle={handleThemeNameToggle}
           />
         )}
-        <Page404 />
+        {/*<Page404 />*/}
       </Main>
       <Footer page={page} onPageNavigation={handlePageNavigation} />
     </ThemeProvider>
