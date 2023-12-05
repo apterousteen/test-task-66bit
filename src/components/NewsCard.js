@@ -14,8 +14,16 @@ export default function NewsCard({ title, date, content }) {
             justifyContent: 'space-between',
           },
         }}
-        title={title}
-        subheader={<Typography variant="subtitle1">{date}</Typography>}
+        title={
+          <Typography variant="h5" component="h2">
+            {title}
+          </Typography>
+        }
+        subheader={
+          <Typography variant="subtitle1" component="span" sx={{ pl: 1.5 }}>
+            {date}
+          </Typography>
+        }
       />
       <CardContent
         sx={{

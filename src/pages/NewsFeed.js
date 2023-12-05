@@ -1,12 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import NewsCard from '../components/NewsCard';
-import ObserverRef from '../components/ObserverRef';
-import { Container, Fab } from '@mui/material';
+import InfoContainer from '../components/InfoContainer';
+import { Container } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { NEWS_GET_ENDPOINT, newsCountPerRequest } from '../config';
 import { timeout, formatDate } from '../helpers';
 import PullToRefresh from 'react-pull-to-refresh';
+import useIntersectionObserver from '../hooks/useIntersectionObserver';
 
 const newsContainerStyle = {
   display: 'flex',
@@ -36,9 +37,9 @@ const loadingButtonStyle = {
 export default function NewsFeed() {
   const [showButton, setShowButton] = useState(false);
   const [news, setNews] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [latestNewsLoading, setLatestNewsLoading] = useState(false);
-  const [newsLoading, setNewsLoading] = useState(false);
+  const [curPage, setCurPage] = useState(1);
+  const [newsRefreshing, setNewsRefreshing] = useState(false);
+  const [newsLoading, setNewsLoading] = useState(true);
   const [newsErrorMsg, setNewsErrorMsg] = useState('');
 
   const filterUniqueNews = (news, rawData) => {
@@ -68,7 +69,7 @@ export default function NewsFeed() {
   // Получение свежих новостей
   const handleRefresh = async () => {
     try {
-      setLatestNewsLoading(true);
+      setNewsRefreshing(true);
 
       const fetchPromise = fetch(
         `${NEWS_GET_ENDPOINT}?page=${1}&count=${newsCountPerRequest}`
@@ -89,9 +90,56 @@ export default function NewsFeed() {
       console.error(e.message);
     } finally {
       window.scrollTo({ top: 0 });
-      setLatestNewsLoading(false);
+      setNewsRefreshing(false);
+      setCurPage((cp) => cp - 1);
     }
   };
+
+  // Бесконечный скролл с использованием Intersection Observer
+  const observerTarget = useRef(null);
+  const isIntersecting = useIntersectionObserver(observerTarget, {
+    rootMargin: '0px 0px 300px 0px',
+    threshold: 0,
+  });
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        setNewsLoading(true);
+        setNewsErrorMsg('');
+
+        const fetchPromise = fetch(
+          `${NEWS_GET_ENDPOINT}?page=${curPage}&count=${newsCountPerRequest}`
+        );
+        const res = await Promise.race([fetchPromise, timeout(4)]);
+
+        if (!res.ok) throw new Error(`Что-то пошло не так. Попробуйте снова`);
+
+        const data = await res.json();
+        console.log(data);
+
+        setNews((news) => {
+          // Устранение дубликатов
+          const uniqueNews = filterUniqueNews(news, data);
+          return [...news, ...uniqueNews];
+        });
+
+        setCurPage((cp) => cp + 1);
+
+        setNewsErrorMsg('');
+      } catch (e) {
+        setNewsErrorMsg(e.message);
+      } finally {
+        setNewsLoading(false);
+      }
+    };
+
+    setNewsLoading(true);
+
+    if (isIntersecting && newsLoading) {
+      fetchNews();
+    }
+  }, [isIntersecting]);
 
   return (
     <PullToRefresh onRefresh={handleRefresh} className="ptr-container">
@@ -102,7 +150,7 @@ export default function NewsFeed() {
             loadingPosition="start"
             startIcon={<ArrowUpwardIcon />}
             variant="outlined"
-            loading={latestNewsLoading}
+            loading={newsRefreshing}
             onClick={handleRefresh}
           >
             Свежие новости
@@ -116,31 +164,11 @@ export default function NewsFeed() {
             content={n.content}
           />
         ))}
-        <NewsCard
-          key={Math.random()}
-          title={'News Heading'}
-          date={'15.12.2001'}
-          content="Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum используют потому, что тот обеспечивает более или менее стандартное"
+        <InfoContainer
+          ref={observerTarget}
+          newsLoading={newsLoading}
+          newsErrorMsg={newsErrorMsg}
         />
-        <NewsCard
-          key={Math.random()}
-          title={'News Heading'}
-          date={'15.12.2001'}
-          content="Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum используют потому, что тот обеспечивает более или менее стандартное"
-        />{' '}
-        <NewsCard
-          key={Math.random()}
-          title={'News Heading'}
-          date={'15.12.2001'}
-          content="Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum используют потому, что тот обеспечивает более или менее стандартное"
-        />{' '}
-        <NewsCard
-          key={Math.random()}
-          title={'News Heading'}
-          date={'15.12.2001'}
-          content="Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum используют потому, что тот обеспечивает более или менее стандартное"
-        />
-        {/*<ObserverRef />*/}
       </Container>
     </PullToRefresh>
   );
