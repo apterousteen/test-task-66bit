@@ -17,3 +17,59 @@ body {
         min-height: calc(100vh - 112px);
     }
 }
+
+/* Pull to refresh */
+.ptr-container {
+    width: 100%;
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin-top: 24px;
+    display: none;
+}
+
+.loading span {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin: 0 5px;
+    background-color: rgb(10, 10, 10);
+    animation: loading 1.5s infinite;
+}
+
+.ptr-loading .loading {
+    display: flex;
+}
+
+.loading-ptr-1 {
+    animation-delay: 0s !important;
+}
+
+.loading-ptr-2 {
+    animation-delay: 0.2s !important;
+}
+
+.loading-ptr-3 {
+    animation-delay: 0.4s !important;
+}
+
+@keyframes loading {
+    0%, 100% {
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1);
+    }
+}
+
+.ptr-loading .refresh-view,
+.ptr-reset .refresh-view,
+.ptr-loading .ptr-element,
+.ptr-reset .ptr-element {
+    transition: all 0.25s ease;
+}

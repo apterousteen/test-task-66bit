@@ -6,6 +6,7 @@ import { LoadingButton } from '@mui/lab';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { NEWS_GET_ENDPOINT, newsCountPerRequest } from '../config';
 import { timeout, formatDate } from '../helpers';
+import PullToRefresh from 'react-pull-to-refresh';
 
 const newsContainerStyle = {
   display: 'flex',
@@ -65,7 +66,7 @@ export default function NewsFeed() {
   }, []);
 
   // Получение свежих новостей
-  const fetchLatestNews = async () => {
+  const handleRefresh = async () => {
     try {
       setLatestNewsLoading(true);
 
@@ -93,52 +94,54 @@ export default function NewsFeed() {
   };
 
   return (
-    <Container sx={newsContainerStyle}>
-      {showButton && (
-        <LoadingButton
-          sx={loadingButtonStyle}
-          loadingPosition="start"
-          startIcon={<ArrowUpwardIcon />}
-          variant="outlined"
-          loading={latestNewsLoading}
-          onClick={fetchLatestNews}
-        >
-          Свежие новости
-        </LoadingButton>
-      )}
-      {news?.map((n) => (
+    <PullToRefresh onRefresh={handleRefresh} className="ptr-container">
+      <Container sx={newsContainerStyle}>
+        {showButton && (
+          <LoadingButton
+            sx={loadingButtonStyle}
+            loadingPosition="start"
+            startIcon={<ArrowUpwardIcon />}
+            variant="outlined"
+            loading={latestNewsLoading}
+            onClick={handleRefresh}
+          >
+            Свежие новости
+          </LoadingButton>
+        )}
+        {news?.map((n) => (
+          <NewsCard
+            key={n.id}
+            title={n.title}
+            date={formatDate(n.createdAt)}
+            content={n.content}
+          />
+        ))}
         <NewsCard
-          key={n.id}
-          title={n.title}
-          date={formatDate(n.createdAt)}
-          content={n.content}
+          key={Math.random()}
+          title={'News Heading'}
+          date={'15.12.2001'}
+          content="Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum используют потому, что тот обеспечивает более или менее стандартное"
         />
-      ))}
-      <NewsCard
-        key={Math.random()}
-        title={'News Heading'}
-        date={'15.12.2023'}
-        content="Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum используют потому, что тот обеспечивает более или менее стандартное"
-      />
-      <NewsCard
-        key={Math.random()}
-        title={'News Heading'}
-        date={'15.12.2023'}
-        content="Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum используют потому, что тот обеспечивает более или менее стандартное"
-      />{' '}
-      <NewsCard
-        key={Math.random()}
-        title={'News Heading'}
-        date={'15.12.2023'}
-        content="Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum используют потому, что тот обеспечивает более или менее стандартное"
-      />{' '}
-      <NewsCard
-        key={Math.random()}
-        title={'News Heading'}
-        date={'15.12.2023'}
-        content="Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum используют потому, что тот обеспечивает более или менее стандартное"
-      />{' '}
-      <ObserverRef />
-    </Container>
+        <NewsCard
+          key={Math.random()}
+          title={'News Heading'}
+          date={'15.12.2001'}
+          content="Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum используют потому, что тот обеспечивает более или менее стандартное"
+        />{' '}
+        <NewsCard
+          key={Math.random()}
+          title={'News Heading'}
+          date={'15.12.2001'}
+          content="Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum используют потому, что тот обеспечивает более или менее стандартное"
+        />{' '}
+        <NewsCard
+          key={Math.random()}
+          title={'News Heading'}
+          date={'15.12.2001'}
+          content="Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum используют потому, что тот обеспечивает более или менее стандартное"
+        />
+        {/*<ObserverRef />*/}
+      </Container>
+    </PullToRefresh>
   );
 }

@@ -17,7 +17,7 @@ export default function ObserverRef() {
     <Stack sx={stackStyle} spacing={2}>
       <Typography variant="h6">Loading...</Typography>
       <Alert severity="error" sx={alertErrorStyle}>
-        Что-то пошло не так, попробуйте еще раз.
+        Что-то пошло не так. Попробуйте снова
       </Alert>
     </Stack>
   );
