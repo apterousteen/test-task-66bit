@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, Typography } from '@mui/material';
 
-export default function NewsCard() {
+export default function NewsCard({ title, date, content }) {
   return (
     <Card variant="outlined" sx={{ bgcolor: 'primary.main', p: 1.5 }}>
       <CardHeader
@@ -14,8 +14,8 @@ export default function NewsCard() {
             justifyContent: 'space-between',
           },
         }}
-        title="News heading"
-        subheader={<Typography variant="subtitle1">14.12.2016</Typography>}
+        title={title}
+        subheader={<Typography variant="subtitle1">{date}</Typography>}
       />
       <CardContent
         sx={{
@@ -24,11 +24,7 @@ export default function NewsCard() {
           },
         }}
       >
-        <Typography>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci
-          aliquam architecto aut consectetur deleniti dolore enim et excepturi
-          facere ipsa.
-        </Typography>
+        <Typography>{content}</Typography>
       </CardContent>
     </Card>
   );

@@ -11,3 +11,8 @@ export const getPageName = (pathname) => {
   else if (pathname === '/themes') return 'themes';
   else return null;
 };
+
+export const formatDate = (date) => {
+  date = new Date(date);
+  return new Intl.DateTimeFormat('ru-RU').format(date);
+};
