@@ -5,40 +5,13 @@ import {
   Container,
 } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
-import { radioButtonTheme } from '../themeStyles';
+import { radioButtonTheme } from '../styles/themeStyles';
 import { themeNames } from '../config';
-
-// Стили
-const themesContainerStyle = {
-  display: 'flex',
-  flex: 1,
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  margin: 'auto',
-  gap: 6,
-};
-
-const alertInfoStyle = {
-  bgcolor: 'info.main',
-  '& .MuiAlert-message': {
-    color: 'info.text',
-  },
-  '& .MuiAlert-icon': {
-    color: 'info.icon',
-  },
-};
-
-const alertErrorStyle = {
-  width: '65vw',
-  bgcolor: 'error.main',
-  '& .MuiAlert-message': {
-    color: 'error.text',
-  },
-  '& .MuiAlert-icon': {
-    color: 'error.icon',
-  },
-};
+import {
+  themesAlertErrorStyle,
+  themesAlertInfoStyle,
+  themesContainerStyle,
+} from '../styles/componentStyles';
 
 export default function Themes({
   themeName,
@@ -49,7 +22,7 @@ export default function Themes({
   return (
     <Container sx={themesContainerStyle}>
       {!themeErrorMsg && (
-        <Alert severity="info" sx={alertInfoStyle}>
+        <Alert severity="info" sx={themesAlertInfoStyle}>
           {themeLoading && 'Загрузка темы...'}
           {!themeLoading && (
             <>
@@ -59,7 +32,7 @@ export default function Themes({
         </Alert>
       )}
       {themeErrorMsg && (
-        <Alert severity="error" sx={alertErrorStyle}>
+        <Alert severity="error" sx={themesAlertErrorStyle}>
           {themeErrorMsg}
         </Alert>
       )}

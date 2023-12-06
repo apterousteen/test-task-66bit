@@ -1,19 +1,14 @@
 import { Card, CardContent, CardHeader, Typography } from '@mui/material';
+import {
+  newsCardCardContent,
+  newsCardCardHeader,
+} from '../styles/componentStyles';
 
 export default function NewsCard({ title, date, content }) {
   return (
     <Card variant="outlined" sx={{ bgcolor: 'primary.main', p: 1.5 }}>
       <CardHeader
-        sx={{
-          pb: 1.5,
-          borderBottom: 'solid 1px',
-          borderBottomColor: 'textColor.main',
-          '& .MuiCardHeader-content': {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          },
-        }}
+        sx={newsCardCardHeader}
         title={
           <Typography variant="h5" component="h2">
             {title}
@@ -25,13 +20,7 @@ export default function NewsCard({ title, date, content }) {
           </Typography>
         }
       />
-      <CardContent
-        sx={{
-          '&:last-child': {
-            paddingBottom: 2,
-          },
-        }}
-      >
+      <CardContent sx={newsCardCardContent}>
         <Typography>{content}</Typography>
       </CardContent>
     </Card>

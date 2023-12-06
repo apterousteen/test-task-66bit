@@ -1,10 +1,5 @@
 import { Container } from '@mui/material';
-
-const mainInnerContainerStyle = {
-  display: 'flex',
-  backgroundColor: 'secondary.main',
-  p: 0,
-};
+import { mainInnerContainerStyle } from '../styles/componentStyles';
 
 export default function Main({ children }) {
   return (

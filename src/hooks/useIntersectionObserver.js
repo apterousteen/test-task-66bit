@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+// Хук для идентификации пересечения ref с viewport при помощи Intersection Observer
 export default function useIntersectionObserver(ref, options) {
   const [isIntersecting, setIsIntersecting] = useState(false);
 

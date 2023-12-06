@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { colors, defaultTheme } from '../themeStyles';
+import { colors, defaultTheme } from '../styles/themeStyles';
 import { THEME_GET_ENDPOINT } from '../config';
 import { timeout } from '../helpers';
 import { createTheme } from '@mui/material/styles';
 
+// Хук, который загружает тему из API и меняет ее
 export const useTheme = (themeName) => {
   const [themeLoading, setThemeLoading] = useState(false);
   const [themeErrorMsg, setThemeErrorMsg] = useState('');
@@ -59,6 +60,11 @@ export const useTheme = (themeName) => {
 
         setThemeErrorMsg('');
       } catch (e) {
+        if (e.message.includes('fetch')) {
+          setThemeErrorMsg('Не удалось загрузить тему');
+          return;
+        }
+
         if (e.name !== 'AbortError') {
           setThemeErrorMsg(e.message);
         }

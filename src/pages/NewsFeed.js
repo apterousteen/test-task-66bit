@@ -8,55 +8,32 @@ import { NEWS_GET_ENDPOINT, newsCountPerRequest } from '../config';
 import { timeout, formatDate } from '../helpers';
 import PullToRefresh from 'react-pull-to-refresh';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
-
-const newsContainerStyle = {
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 2,
-  py: 3,
-};
-
-const loadingButtonStyle = {
-  position: 'fixed',
-  m: 'auto',
-  left: 0,
-  right: 0,
-  width: 'fit-content',
-  bgcolor: 'secondary.main',
-  border: '2px solid',
-  borderColor: 'textColor.main',
-  color: 'textColor.main',
-  textTransform: 'none',
-  opacity: 0.8,
-  '&:hover': {
-    opacity: 1,
-    bgcolor: 'secondary.main',
-    border: '2px solid',
-    color: 'textColor.main',
-  },
-};
+import {
+  newsFeedLoadingButtonStyle,
+  newsFeedNewsContainerStyle,
+} from '../styles/componentStyles';
 
 export default function NewsFeed() {
   const [showButton, setShowButton] = useState(false);
-  // const [news, setNews] = useState([]);
   const [curPage, setCurPage] = useState(1);
   const [newsRefreshing, setNewsRefreshing] = useState(false);
   const [newsLoading, setNewsLoading] = useState(true);
   const [newsErrorMsg, setNewsErrorMsg] = useState('');
   const [newsMsg, setNewsMsg] = useState('');
 
-  // Получение из local storage
+  // Получение новостей из local storage
   const [news, setNews] = useState(() => {
     const localNews = JSON.parse(localStorage.getItem('news'));
 
     return localNews || [];
   });
 
-  // Сохранение в local storage
+  // Сохранение новостей в local storage
   useEffect(() => {
     localStorage.setItem('news', JSON.stringify(news));
   }, [news]);
 
+  // Удаляет дубликаты новостей
   const filterUniqueNews = (news, rawData) => {
     const ids = news.map((newsItem) => newsItem.id);
     const uniqueData = rawData.filter((dataItem) => !ids.includes(dataItem.id));
@@ -106,7 +83,7 @@ export default function NewsFeed() {
     } finally {
       window.scrollTo({ top: 0 });
       setNewsRefreshing(false);
-      setCurPage((cp) => cp - 1);
+      setCurPage((cp) => (cp > 0 ? cp - 1 : cp));
     }
   };
 
@@ -117,6 +94,7 @@ export default function NewsFeed() {
     threshold: 0,
   });
 
+  // Получение старых новостей
   useEffect(() => {
     const fetchNews = async () => {
       try {
@@ -170,10 +148,10 @@ export default function NewsFeed() {
 
   return (
     <PullToRefresh onRefresh={handleRefresh} className="ptr-container">
-      <Container sx={newsContainerStyle}>
+      <Container sx={newsFeedNewsContainerStyle}>
         {showButton && (
           <LoadingButton
-            sx={loadingButtonStyle}
+            sx={newsFeedLoadingButtonStyle}
             loadingPosition="start"
             startIcon={<ArrowUpwardIcon />}
             variant="outlined"

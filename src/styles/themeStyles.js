@@ -1,5 +1,7 @@
 import { createTheme } from '@mui/material/styles';
 
+// Стили тем
+
 // Дополнительные цвета не из API
 export const colors = {
   lightErrorInfo: {

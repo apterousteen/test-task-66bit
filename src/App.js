@@ -11,9 +11,7 @@ import NewsFeed from './pages/NewsFeed';
 import Page404 from './pages/Page404';
 import { useTheme } from './hooks/useTheme';
 
-// TODO: вынести все стили в отдельный файл
-
-function App() {
+export default function App() {
   const [page, setPage] = useState(getPageName(window.location.pathname));
 
   // Название темы необходимо для работы ToggleGroup
@@ -25,11 +23,17 @@ function App() {
     return localThemeName || 'light';
   });
 
+  // Установка темы
   const {
     themeLoading,
     themeErrorMsg,
     themeData: curTheme,
   } = useTheme(themeName);
+
+  // Сохранение темы в local storage
+  useEffect(() => {
+    localStorage.setItem('theme', JSON.stringify(curTheme));
+  }, [curTheme]);
 
   const handleThemeNameToggle = (e, newThemeName) => {
     // Отключение поведения toggle у кнопки
@@ -41,10 +45,6 @@ function App() {
   const handlePageNavigation = (pageName) => {
     setPage(pageName);
   };
-
-  useEffect(() => {
-    localStorage.setItem('theme', JSON.stringify(curTheme));
-  }, [curTheme]);
 
   return (
     <ThemeProvider theme={curTheme}>
@@ -71,5 +71,3 @@ function App() {
     </ThemeProvider>
   );
 }
-
-export default App;

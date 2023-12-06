@@ -1,11 +1,5 @@
 import { Container, Typography } from '@mui/material';
-
-const page404ContainerStyle = {
-  m: 'auto',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-};
+import { page404ContainerStyle } from '../styles/componentStyles';
 
 export default function Page404() {
   return (
