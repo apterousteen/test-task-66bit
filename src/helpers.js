@@ -7,7 +7,6 @@ export const timeout = function (s) {
 };
 
 export const getPageName = (location) => {
-  console.log(location.hash);
   if (
     (location.pathname === '/' && location.hash === '') ||
     (location.pathname === '/test-task-66bit/' && location.hash === '#/')

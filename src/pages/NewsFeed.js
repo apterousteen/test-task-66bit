@@ -6,7 +6,7 @@ import { LoadingButton } from '@mui/lab';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { NEWS_GET_ENDPOINT, newsCountPerRequest } from '../config';
 import { timeout, formatDate } from '../helpers';
-import PullToRefresh from 'react-pull-to-refresh';
+import PullToRefresh from 'react-simple-pull-to-refresh';
 import useIntersectionObserver from '../hooks/useIntersectionObserver';
 import {
   newsFeedLoadingButtonStyle,
@@ -147,7 +147,12 @@ export default function NewsFeed() {
   }, [isIntersecting]);
 
   return (
-    <PullToRefresh onRefresh={handleRefresh} className="ptr-container">
+    <PullToRefresh
+      onRefresh={handleRefresh}
+      pullDownThreshold={40}
+      pullingContent=""
+      maxPullDownDistance={60}
+    >
       <Container sx={newsFeedNewsContainerStyle}>
         {showButton && (
           <LoadingButton
