@@ -41,7 +41,7 @@ npm start
 - React
 - MUI 5
 - React Router
-- react-pull-to-refresh
+- react-simple-pull-to-refresh
 - INTL, Abort Controller, Intersection Observer 
 - Create React App, ESLint, Prettier
 
