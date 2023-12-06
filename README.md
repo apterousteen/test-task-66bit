@@ -4,7 +4,7 @@
 
 Проект закончен: 06.12.2023
 
-Ссылка: https://apterousteen.github.io/test-task-66bit/
+Ссылка: https://apterousteen.github.io/test-task-66bit/#
 
 ## Инструкция
 
