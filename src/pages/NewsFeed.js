@@ -24,10 +24,12 @@ const loadingButtonStyle = {
   width: 'fit-content',
   bgcolor: 'secondary.main',
   border: '2px solid',
-  borderColor: 'primary.dim',
-  color: 'primary.dim',
+  borderColor: 'textColor.main',
+  color: 'textColor.main',
   textTransform: 'none',
+  opacity: 0.8,
   '&:hover': {
+    opacity: 1,
     bgcolor: 'secondary.main',
     border: '2px solid',
     color: 'textColor.main',
@@ -36,11 +38,24 @@ const loadingButtonStyle = {
 
 export default function NewsFeed() {
   const [showButton, setShowButton] = useState(false);
-  const [news, setNews] = useState([]);
+  // const [news, setNews] = useState([]);
   const [curPage, setCurPage] = useState(1);
   const [newsRefreshing, setNewsRefreshing] = useState(false);
   const [newsLoading, setNewsLoading] = useState(true);
   const [newsErrorMsg, setNewsErrorMsg] = useState('');
+  const [newsMsg, setNewsMsg] = useState('');
+
+  // Получение из local storage
+  const [news, setNews] = useState(() => {
+    const localNews = JSON.parse(localStorage.getItem('news'));
+
+    return localNews || [];
+  });
+
+  // Сохранение в local storage
+  useEffect(() => {
+    localStorage.setItem('news', JSON.stringify(news));
+  }, [news]);
 
   const filterUniqueNews = (news, rawData) => {
     const ids = news.map((newsItem) => newsItem.id);
@@ -98,7 +113,7 @@ export default function NewsFeed() {
   // Бесконечный скролл с использованием Intersection Observer
   const observerTarget = useRef(null);
   const isIntersecting = useIntersectionObserver(observerTarget, {
-    rootMargin: '0px 0px 300px 0px',
+    rootMargin: '0px 0px 100px 0px',
     threshold: 0,
   });
 
@@ -107,6 +122,7 @@ export default function NewsFeed() {
       try {
         setNewsLoading(true);
         setNewsErrorMsg('');
+        setNewsMsg('');
 
         const fetchPromise = fetch(
           `${NEWS_GET_ENDPOINT}?page=${curPage}&count=${newsCountPerRequest}`
@@ -116,7 +132,12 @@ export default function NewsFeed() {
         if (!res.ok) throw new Error(`Что-то пошло не так. Попробуйте снова`);
 
         const data = await res.json();
-        console.log(data);
+
+        if (data.length === 0) {
+          setNewsMsg('Вы посмотрели все новости');
+          setNewsErrorMsg('');
+          return;
+        }
 
         setNews((news) => {
           // Устранение дубликатов
@@ -128,6 +149,12 @@ export default function NewsFeed() {
 
         setNewsErrorMsg('');
       } catch (e) {
+        console.error(e.message);
+        if (e.message.includes('fetch')) {
+          setNewsErrorMsg('Не удалось получить новости');
+          return;
+        }
+
         setNewsErrorMsg(e.message);
       } finally {
         setNewsLoading(false);
@@ -168,6 +195,7 @@ export default function NewsFeed() {
           ref={observerTarget}
           newsLoading={newsLoading}
           newsErrorMsg={newsErrorMsg}
+          newsMsg={newsMsg}
         />
       </Container>
     </PullToRefresh>

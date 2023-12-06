@@ -17,6 +17,7 @@ function App() {
   const [page, setPage] = useState(getPageName(window.location.pathname));
 
   // Название темы необходимо для работы ToggleGroup
+  // Получение названия темы из local storage
   const [themeName, setThemeName] = useState(() => {
     const localThemeName = JSON.parse(localStorage.getItem('theme'))?.palette
       ?.type;

@@ -20,21 +20,28 @@ const alertErrorStyle = {
   },
 };
 
-const InfoContainer = forwardRef(({ newsLoading, newsErrorMsg }, ref) => {
-  return (
-    <div ref={ref} style={stackStyle}>
-      {newsLoading && (
-        <Typography variant="h6" component="p">
-          Загрузка новостей...
-        </Typography>
-      )}
-      {newsErrorMsg && (
-        <Alert severity="error" sx={alertErrorStyle}>
-          {newsErrorMsg}
-        </Alert>
-      )}
-    </div>
-  );
-});
+const InfoContainer = forwardRef(
+  ({ newsLoading, newsErrorMsg, newsMsg }, ref) => {
+    return (
+      <div ref={ref} style={stackStyle}>
+        {newsLoading && !newsErrorMsg && (
+          <Typography variant="h6" component="p">
+            Загрузка новостей...
+          </Typography>
+        )}
+        {newsErrorMsg && (
+          <Alert severity="error" sx={alertErrorStyle}>
+            {newsErrorMsg}
+          </Alert>
+        )}
+        {newsMsg && !newsErrorMsg && (
+          <Typography variant="h6" component="p">
+            {newsMsg}
+          </Typography>
+        )}
+      </div>
+    );
+  }
+);
 
 export default InfoContainer;
