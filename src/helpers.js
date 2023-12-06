@@ -6,9 +6,15 @@ export const timeout = function (s) {
   });
 };
 
-export const getPageName = (pathname) => {
-  if (pathname === '/') return 'news';
-  else if (pathname === '/themes') return 'themes';
+export const getPageName = (location) => {
+  console.log(location.hash);
+  if (
+    (location.pathname === '/' && location.hash === '') ||
+    (location.pathname === '/test-task-66bit/' && location.hash === '#/')
+  )
+    return 'news';
+  else if (location.pathname === '/themes' || location.hash === '#/themes')
+    return 'themes';
   else return null;
 };
 

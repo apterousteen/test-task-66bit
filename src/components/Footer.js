@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BottomNavigation, BottomNavigationAction, Paper } from '@mui/material';
 import { ColorLens, Feed } from '@mui/icons-material';
@@ -8,20 +7,14 @@ import {
 } from '../styles/componentStyles';
 
 export default function Footer({ page, onPageNavigation }) {
-  const [value, setValue] = useState(page);
-
-  useEffect(() => {
-    onPageNavigation(value);
-  }, [value]);
-
   return (
     <Paper sx={footerPaperStyle} elevation={3}>
       <BottomNavigation
         sx={footerBottomNavStyle}
         showLabels
-        value={value}
+        value={page}
         onChange={(e, newValue) => {
-          setValue(newValue);
+          onPageNavigation(newValue);
         }}
       >
         <BottomNavigationAction

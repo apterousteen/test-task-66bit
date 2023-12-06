@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import { CssBaseline } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { getPageName } from './helpers';
@@ -12,7 +12,8 @@ import Page404 from './pages/Page404';
 import { useTheme } from './hooks/useTheme';
 
 export default function App() {
-  const [page, setPage] = useState(getPageName(window.location.pathname));
+  let location = useLocation();
+  const [page, setPage] = useState(getPageName(location));
 
   // Название темы необходимо для работы ToggleGroup
   // Получение названия темы из local storage
@@ -41,6 +42,11 @@ export default function App() {
       setThemeName(newThemeName);
     }
   };
+
+  // Для корректного отображения навигации
+  useEffect(() => {
+    setPage(getPageName(location));
+  }, [location]);
 
   const handlePageNavigation = (pageName) => {
     setPage(pageName);
